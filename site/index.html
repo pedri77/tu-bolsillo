@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tu bolsillo · ¿Tu sueldo vale hoy lo mismo que antes?</title>
+<meta name="description" content="Calcula si tu sueldo ha ganado o perdido poder adquisitivo, qué productos han subido más y dónde está más barata la gasolina. Datos oficiales del INE y del Ministerio, actualizados solos.">
+<meta property="og:title" content="Tu bolsillo · ¿Tu sueldo vale hoy lo mismo que antes?">
+<meta property="og:description" content="Calcula tu poder adquisitivo con datos oficiales: salarios, IPC por producto y gasolina, actualizados solos.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pedri77.github.io/tu-bolsillo/">
+<meta name="theme-color" content="#1d4d3f">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231d4d3f'/><text x='32' y='44' font-size='34' text-anchor='middle' font-family='Georgia' font-weight='700' fill='%23f3c14b'>€</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#"><span class="logo" aria-hidden="true">€</span> Tu bolsillo</a>
+    <nav aria-label="Secciones">
+      <a href="#calculadora">Calculadora</a>
+      <a href="#sueldos">Sueldos</a>
+      <a href="#cesta">La cesta</a>
+      <a href="#gasolina">Gasolina</a>
+      <a href="#metodologia">Metodología</a>
+    </nav>
+    <button id="themeBtn" class="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">◐</button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="calculadora">
+    <div class="wrap hero-in">
+      <div class="hero-text">
+        <p class="eyebrow">Poder adquisitivo · datos oficiales</p>
+        <h1>¿Tu sueldo vale hoy lo mismo que antes?</h1>
+        <p class="lede">Los precios suben cada mes. Pon tu sueldo y el año con el que quieres compararlo y te digo cuánto necesitarías cobrar hoy para vivir igual.</p>
+        <p class="stamp" id="stamp">Cargando datos…</p>
+      </div>
+      <form class="calc card" id="calc" autocomplete="off">
+        <div class="row2">
+          <label>Tu sueldo en aquel año
+            <span class="money"><input id="cSueldoAntes" inputmode="decimal" placeholder="1.500" aria-describedby="ayudaSueldo"><span>€</span></span>
+          </label>
+          <label>Año
+            <select id="cAnio"></select>
+          </label>
+        </div>
+        <div class="row2">
+          <label>Tu sueldo hoy <span class="opt">(opcional)</span>
+            <span class="money"><input id="cSueldoHoy" inputmode="decimal" placeholder="1.800"><span>€</span></span>
+          </label>
+          <label>Periodo
+            <select id="cPeriodo"><option value="mes">al mes</option><option value="anio">al año</option></select>
+          </label>
+        </div>
+        <p class="muted small" id="ayudaSueldo">Bruto o neto, como prefieras: la comparación es la misma si usas siempre el mismo.</p>
+        <div class="result" id="cResult" aria-live="polite"></div>
+        <div class="share" id="cShare" hidden>
+          <button type="button" id="btnCopiar">Copiar enlace</button>
+          <a id="shWa" target="_blank" rel="noopener">WhatsApp</a>
+          <a id="shX" target="_blank" rel="noopener">X</a>
+          <a id="shLi" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="band" id="sueldos">
+    <div class="wrap">
+      <p class="eyebrow">Sueldos frente a precios</p>
+      <h2 id="sTitulo">El sueldo medio, frente a los precios</h2>
+      <div class="kpis" id="sKpis"></div>
+      <div class="card">
+        <div class="chart-head"><h3>Poder adquisitivo del sueldo medio</h3>
+          <label class="inline">Desde <select id="sBase"></select></label></div>
+        <div id="sChart"></div>
+        <p class="muted small">Sueldo medio (coste salarial total por trabajador y mes) dividido entre el nivel de precios. 100 = el año elegido. Por encima de 100, el sueldo medio compra más que entonces; por debajo, menos.</p>
+      </div>
+      <h3 class="sub">Por comunidad autónoma</h3>
+      <p class="muted small" id="sCcaaNota"></p>
+      <div id="sCcaa" class="bars"></div>
+    </div>
+  </section>
+
+  <section class="band alt" id="cesta">
+    <div class="wrap">
+      <p class="eyebrow">La cesta de la compra</p>
+      <h2>¿Qué ha subido más que tu sueldo?</h2>
+      <p class="lede" id="cestaLede"></p>
+      <div class="filters">
+        <label class="inline">Desde <select id="pBase"></select></label>
+        <label class="inline">Tipo <select id="pGrupo"><option value="">Todo</option></select></label>
+        <label class="inline grow">Buscar <input id="pBuscar" placeholder="huevos, aceite, alquiler, luz…"></label>
+      </div>
+      <div class="grid2">
+        <div><h3>Lo que más ha subido</h3><div id="pSube" class="bars"></div></div>
+        <div><h3>Lo que menos ha subido (o ha bajado)</h3><div id="pBaja" class="bars"></div></div>
+      </div>
+      <div id="pBusqueda" class="bars"></div>
+      <p class="muted small">Variación de la media de los últimos 12 meses frente a la media del año elegido. Pulsa un producto para ver su evolución.</p>
+      <div id="pDetalle"></div>
+    </div>
+  </section>
+
+  <section class="band" id="gasolina">
+    <div class="wrap">
+      <p class="eyebrow">Gasolina y gasóleo</p>
+      <h2>¿Dónde está más barata hoy?</h2>
+      <div class="kpis" id="gKpis"></div>
+      <div class="filters">
+        <label class="inline">Provincia <select id="gProv"></select></label>
+        <label class="inline">Combustible <select id="gComb"><option value="g95">Gasolina 95</option><option value="diesel">Gasóleo A</option></select></label>
+      </div>
+      <div class="grid2">
+        <div><h3 id="gTituloBaratas">Las más baratas</h3><div class="table-wrap" id="gBaratas"></div></div>
+        <div><h3>Media por provincia</h3><div id="gProvincias" class="bars scroll"></div></div>
+      </div>
+      <div class="card">
+        <h3>Precio de los carburantes desde 2017</h3>
+        <div id="gChart"></div>
+        <p class="muted small">Índice de precios de consumo de los carburantes (INE). 100 = media de 2025.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="metodologia">
+    <div class="wrap prose">
+      <p class="eyebrow">Metodología</p>
+      <h2>De dónde salen los datos</h2>
+      <ul>
+        <li><strong>Precios:</strong> Índice de Precios de Consumo del INE, base 2025 (clasificación ECOICOP ver.2), con series enlazadas desde 2002: índice general, por comunidad autónoma y 196 productos y servicios. <span id="mIpc"></span></li>
+        <li><strong>Sueldos:</strong> Encuesta Trimestral de Coste Laboral del INE: coste salarial total por trabajador y mes (industria, construcción y servicios), desde 2008. <span id="mSal"></span></li>
+        <li><strong>Gasolina:</strong> precios que comunican cada día las estaciones de servicio al Ministerio para la Transición Ecológica y el Reto Demográfico (geoportal de gasolineras). <span id="mGas"></span></li>
+      </ul>
+      <h3>Cómo se calcula</h3>
+      <ul>
+        <li>La calculadora compara la media del IPC del año elegido con la media de los últimos 12 meses publicados. Si has ganado o perdido poder adquisitivo es la diferencia entre lo que ha subido tu sueldo y lo que han subido los precios.</li>
+        <li>El sueldo medio es una media de todos los trabajadores asalariados: si cambia el tipo de empleo (más o menos jornada parcial, sectores con sueldos distintos), la media también cambia aunque ningún sueldo concreto lo haga. Tu caso puede ser muy distinto.</li>
+        <li>Los trimestres tienen pagas extra (junio y diciembre), por eso se comparan siempre medias de cuatro trimestres completos.</li>
+        <li>La subida de cada producto es su índice de precios, no su precio en euros: mide cuánto más cuesta lo mismo.</li>
+        <li>La gasolina se actualiza a diario; los precios los declara cada estación y pueden cambiar durante el día.</li>
+      </ul>
+      <p>Todo se actualiza solo cada día con GitHub Actions. Código abierto (MIT) en <a href="https://github.com/pedri77/tu-bolsillo">GitHub</a>. Datos: © INE y MITECO, reutilización autorizada citando la fuente. Esta web no guarda ningún dato de lo que escribes: los cálculos se hacen en tu navegador.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="kitbox">
+      <strong>Hecho con IA en un día.</strong> Aprende a construir el tuyo: <a href="https://iacedemy.com/kit-observatorio?utm_source=tu-bolsillo&amp;utm_medium=web&amp;utm_campaign=construido-con-ia&amp;utm_content=footer">kit gratis con plantilla y prompts</a>.
+    </div>
+    <p class="small muted">Tu bolsillo · proyecto cívico independiente, sin publicidad ni cookies. Datos oficiales del INE y del Ministerio para la Transición Ecológica. <span id="footDate"></span></p>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>
